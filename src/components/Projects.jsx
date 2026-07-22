@@ -1,4 +1,8 @@
 import ProjectCard from "./ProjectCard";
+import timelineShot from "../assets/memories/memories-timeline.png";
+import guestbookShot from "../assets/memories/memories-guestbook.png";
+import mapShot from "../assets/memories/memories-map.png";
+import monthsShot from "../assets/memories/memories-months.png";
 
 // TODO: swap the "#" hrefs below for your real repo links and demo
 // walkthroughs (see README.md → "Filling in your content").
@@ -52,8 +56,13 @@ const projects = [
       "Scale-to-zero by design: on-demand DynamoDB and Lambda keep this running at effectively $0",
     ],
     note: "Originally built as a private gift project — the architecture and security decisions are the portfolio-relevant part.",
+    screenshots: [
+      { src: timelineShot, caption: "Scrolling timeline" },
+      { src: guestbookShot, caption: "Guestbook" },
+      { src: mapShot, caption: "Places visited map" },
+      { src: monthsShot, caption: "Month-by-month calendar" },
+    ],
     repoHref: "https://github.com/Moshik23/memories",
-    demoHref: "#",
   },
 ];
 

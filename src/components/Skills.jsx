@@ -2,12 +2,12 @@ const groups = [
   {
     label: "Azure",
     color: "text-azure",
-    items: ["Functions", "Container Apps", "Azure SQL", "Azure DevOps", "App Settings & Managed Identities"],
+    items: ["Functions", "Container Apps", "Azure SQL", "Azure DevOps", "App Settings & Managed Identities", "AZ-900 (in progress)"],
   },
   {
     label: "AWS",
     color: "text-amber",
-    items: ["S3 + CloudFront", "Lambda", "API Gateway", "DynamoDB", "IAM", "CLF-C02 (in progress)"],
+    items: ["S3 + CloudFront", "Lambda", "API Gateway", "DynamoDB", "IAM", "CLF-C02 (certified)"],
   },
   {
     label: "Infra & delivery",

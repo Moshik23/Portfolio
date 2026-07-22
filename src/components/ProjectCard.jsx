@@ -16,6 +16,7 @@ export default function ProjectCard({
   demoHref,
   secondaryHref,
   secondaryLabel,
+  screenshots = [],
 }) {
   return (
     <article className="rounded-lg border border-line bg-elevated/60 p-6 sm:p-8">
@@ -57,7 +58,22 @@ export default function ProjectCard({
         </p>
       )}
 
-      <div className="flex gap-4 font-mono text-xs uppercase tracking-wider">
+     {screenshots.length > 0 && (
+        <div className="grid grid-cols-2 gap-2 mb-5">
+          {screenshots.map((s) => (
+            <a key={s.src} href={s.src} target="_blank" rel="noopener noreferrer">
+              <img
+                src={s.src}
+                alt={s.caption}
+                title={s.caption}
+                className="rounded border border-line w-full h-auto object-cover hover:opacity-80 transition-opacity"
+              />
+            </a>
+          ))}
+        </div>
+      )} 
+
+     <div className="flex gap-4 font-mono text-xs uppercase tracking-wider">
         {demoHref && (
           <a href={demoHref} className="text-amber hover:underline">
             walkthrough →
