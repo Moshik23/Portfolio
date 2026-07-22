@@ -24,6 +24,9 @@ demo can't show on its own.
 - **Remote state** — Terraform state lives in a dedicated S3 bucket with
   DynamoDB-based locking, so infra changes can be applied safely from any
   machine, not just the one that first ran `terraform apply`
+- **GitHub Actions** — every push to `main` automatically builds and
+  deploys the site (`.github/workflows/deploy.yml`): install, build, sync
+  to S3, invalidate CloudFront
 
 ## Running locally
 
@@ -46,27 +49,35 @@ npm run preview # sanity-check the production build locally
 src/
 ├── App.jsx — page composition
 ├── index.css — design tokens (colors, fonts) + Tailwind entry
+├── assets/
+│ └── memories/ — sanitized screenshots for the Memories project card
 └── components/
 ├── Nav.jsx
 ├── Hero.jsx
 ├── About.jsx
 ├── Skills.jsx
 ├── Projects.jsx — case study content lives here
-├── ProjectCard.jsx — reusable card layout
+├── ProjectCard.jsx — reusable card layout (links, screenshot gallery)
 └── Contact.jsx
 terraform/
 └── main.tf — S3 + CloudFront + ACM + custom domain, as code
+.github/workflows/
+└── deploy.yml — CI/CD: build + deploy on every push to main
 
 ## Filling in your content
 
 Everything real about the projects is centralized in
 `src/components/Projects.jsx` — edit the `projects` array to update copy,
-tech stack tags, or highlights. Each project entry has:
+tech stack tags, or highlights. Each project entry supports:
 
 - `repoHref` — link to the project's own GitHub repo
-- `demoHref` — link to a short walkthrough video/GIF (recommended for any
-  project gated behind login, so a recruiter doesn't have to sign up to see
-  it in action)
+- `demoHref` — link to a walkthrough video (optional; omit for projects
+  without one)
+- `secondaryHref` / `secondaryLabel` — a second link, e.g. a separate video
+  showing the CI/CD pipeline in action
+- `screenshots` — an array of `{ src, caption }` for projects better shown
+  as images than video (e.g. anything with personal/private content that's
+  been cropped or redacted before inclusion)
 
 Contact links live in `src/components/Contact.jsx`.
 
@@ -83,7 +94,8 @@ terraform apply \
   -var="acm_certificate_arn=<your-acm-cert-arn>"
 ```
 
-Then build and deploy the site itself:
+The site itself deploys automatically on every push to `main` via GitHub
+Actions. To deploy manually instead:
 
 ```bash
 npm run build
