@@ -34,7 +34,7 @@ const projects = [
     ],
     note: "This one's gated behind auth for real users — see the walkthrough for a full click-through.",
     repoHref: "https://github.com/Moshik23/resume-updater",
-    demoHref: "#",
+    demoHref: "https://youtu.be/56b7KRppkfE",
   },
   {
     title: "Memories",
