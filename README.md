@@ -3,7 +3,7 @@
 My personal portfolio site — built to show cloud consulting employers what
 I've actually shipped, not just what I claim I can do.
 
-**Live site:** _add your deployed URL here once live_
+**Live site:** https://moshikseetloo.com
 
 ## Why this exists
 
@@ -16,8 +16,14 @@ demo can't show on its own.
 
 - **React 19 + Vite** — component structure, fast local dev
 - **Tailwind CSS** — design tokens defined in `tailwind.config.js`
-- Deployed as a static build (`npm run build` → `dist/`) — works on S3 +
-  CloudFront, Azure Static Web Apps, GitHub Pages, or Vercel
+- **AWS S3 + CloudFront** — static hosting behind a CDN, S3 kept fully
+  private and reachable only via CloudFront Origin Access Control
+- **ACM** — HTTPS certificate covering both the apex domain and `www`
+- **Terraform** — the entire deployment (S3, CloudFront, ACM wiring, bucket
+  policy) is defined as code in `terraform/main.tf`
+- **Remote state** — Terraform state lives in a dedicated S3 bucket with
+  DynamoDB-based locking, so infra changes can be applied safely from any
+  machine, not just the one that first ran `terraform apply`
 
 ## Running locally
 
@@ -37,19 +43,19 @@ npm run preview # sanity-check the production build locally
 
 ## Project structure
 
-```
 src/
-├── App.jsx              — page composition
-├── index.css             — design tokens (colors, fonts) + Tailwind entry
+├── App.jsx — page composition
+├── index.css — design tokens (colors, fonts) + Tailwind entry
 └── components/
-    ├── Nav.jsx
-    ├── Hero.jsx
-    ├── About.jsx
-    ├── Skills.jsx
-    ├── Projects.jsx       — case study content lives here
-    ├── ProjectCard.jsx    — reusable card layout
-    └── Contact.jsx
-```
+├── Nav.jsx
+├── Hero.jsx
+├── About.jsx
+├── Skills.jsx
+├── Projects.jsx — case study content lives here
+├── ProjectCard.jsx — reusable card layout
+└── Contact.jsx
+terraform/
+└── main.tf — S3 + CloudFront + ACM + custom domain, as code
 
 ## Filling in your content
 
@@ -66,12 +72,24 @@ Contact links live in `src/components/Contact.jsx`.
 
 ## Deploying
 
-**Option A — AWS (S3 + CloudFront):** matches the stack used in the
-`Milestone` project below; provision a bucket + distribution via Terraform,
-then `aws s3 sync dist/ s3://your-bucket --delete`.
+Infrastructure is provisioned via Terraform:
 
-**Option B — GitHub Pages / Vercel / Netlify:** point the build command at
-`npm run build` and the output directory at `dist/`.
+```bash
+cd terraform
+terraform init
+terraform apply \
+  -var="bucket_name=moshik-portfolio-2026" \
+  -var="domain_name=moshikseetloo.com" \
+  -var="acm_certificate_arn=<your-acm-cert-arn>"
+```
+
+Then build and deploy the site itself:
+
+```bash
+npm run build
+aws s3 sync dist/ s3://moshik-portfolio-2026 --delete
+aws cloudfront create-invalidation --distribution-id <your-distribution-id> --paths "/*"
+```
 
 ## License
 
