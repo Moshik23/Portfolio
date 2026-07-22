@@ -5,6 +5,14 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "s3" {
+    bucket         = "moshik-portfolio-tfstate"
+    key            = "portfolio/terraform.tfstate"
+    region         = "ap-southeast-1"
+    dynamodb_table = "moshik-portfolio-tflock"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
@@ -13,6 +21,16 @@ provider "aws" {
 
 variable "bucket_name" {
   description = "Globally unique S3 bucket name for the portfolio site"
+  type        = string
+}
+
+variable "domain_name" {
+  description = "Custom domain for the portfolio site"
+  type        = string
+}
+
+variable "acm_certificate_arn" {
+  description = "ACM certificate ARN (must be in us-east-1)"
   type        = string
 }
 
@@ -87,8 +105,13 @@ resource "aws_cloudfront_distribution" "site" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = var.acm_certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
+
+  aliases = [var.domain_name, "www.${var.domain_name}"]
+  
 }
 
 # --- Bucket policy: only this CloudFront distribution may read from S3 ---
