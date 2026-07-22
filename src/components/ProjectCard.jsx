@@ -14,6 +14,8 @@ export default function ProjectCard({
   note,
   repoHref,
   demoHref,
+  secondaryHref,
+  secondaryLabel,
 }) {
   return (
     <article className="rounded-lg border border-line bg-elevated/60 p-6 sm:p-8">
@@ -59,6 +61,11 @@ export default function ProjectCard({
         {demoHref && (
           <a href={demoHref} className="text-amber hover:underline">
             walkthrough →
+          </a>
+        )}
+        {secondaryHref && (
+          <a href={secondaryHref} className="text-azure hover:underline">
+            {secondaryLabel || "demo →"}
           </a>
         )}
         {repoHref && (

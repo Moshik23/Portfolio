@@ -8,7 +8,7 @@ const projects = [
     tagline:
       "A cloud-native food surplus recovery platform for Singapore's hawker ecosystem — built as a capstone project with a vendor-facing app for tiered, time-based discounting.",
     status: "demo",
-    statusLabel: "capstone",
+    statusLabel: "Azure",
     stack: ["Azure Functions", "Azure SQL", "Container Apps", "Terraform", "React", "FastAPI", "Docker"],
     highlights: [
       "Timer-triggered Azure Function automatically discounts surplus stock the closer it gets to closing time",
@@ -17,7 +17,9 @@ const projects = [
     ],
     note: "Real environment work: resolved Python version conflicts, ODBC driver setup, and Azure SQL firewall rules during deployment.",
     repoHref: "https://github.com/Moshik23/SecondServe",
-    demoHref: "#",
+    demoHref: "https://youtu.be/yg7a0Do0-x0",
+    secondaryHref: "https://youtu.be/uuSBZlsWh0o",
+    secondaryLabel: "ci/cd demo",
   },
   {
     title: "AI Resume Tailor",
