@@ -69,6 +69,24 @@ const projects = [
   },
 ];
 
+  {
+    id: "portfolio",
+    title: "This Portfolio",
+    tagline:
+      "The site you're looking at right now — proof the infrastructure story is real, not just resume copy.",
+    status: "live",
+    statusLabel: "AWS",
+    stack: ["React", "Vite", "Tailwind", "S3", "CloudFront", "ACM", "Terraform", "GitHub Actions"],
+    highlights: [
+      "Fully private S3 bucket, reachable only via CloudFront Origin Access Control scoped to this distribution's ARN",
+      "Terraform-managed end to end, with remote state in S3 and DynamoDB-based locking — safe to run from any machine, not just the one that first applied it",
+      "Custom domain with ACM-issued HTTPS covering both the apex domain and www",
+      "GitHub Actions auto-builds and redeploys on every push to main",
+    ],
+    note: "A little recursive, yes — but the infrastructure behind this page is a genuine project, not just hosting.",
+    repoHref: "https://github.com/Moshik23/Portfolio",
+  },
+
 export default function Projects() {
   return (
     <section id="projects" className="relative max-w-5xl mx-auto px-6 py-24">
