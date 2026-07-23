@@ -67,8 +67,6 @@ const projects = [
     ],
     repoHref: "https://github.com/Moshik23/memories",
   },
-];
-
   {
     id: "portfolio",
     title: "This Portfolio",
@@ -86,6 +84,7 @@ const projects = [
     note: "A little recursive, yes — but the infrastructure behind this page is a genuine project, not just hosting.",
     repoHref: "https://github.com/Moshik23/Portfolio",
   },
+];
 
 export default function Projects() {
   return (
