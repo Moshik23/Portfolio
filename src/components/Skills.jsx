@@ -7,7 +7,7 @@ const groups = [
   {
     label: "AWS",
     color: "text-amber",
-    items: ["S3 + CloudFront", "Lambda", "API Gateway", "DynamoDB", "IAM", "CLF-C02 (certified)"],
+    items: ["S3 + CloudFront", "Lambda", "API Gateway", "DynamoDB", "IAM", "ACM", "CLF-C02 (certified)"],
   },
   {
     label: "Infra & delivery",
@@ -17,7 +17,7 @@ const groups = [
   {
     label: "Application",
     color: "text-ink",
-    items: ["React", "FastAPI", "Python", "Node.js"],
+    items: ["React", "Vite", "Tailwind CSS", "FastAPI", "Python", "Node.js"],
   },
 ];
 
