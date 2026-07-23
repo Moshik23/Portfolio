@@ -8,7 +8,7 @@ import monthsShot from "../assets/memories/memories-months.png";
 // walkthroughs (see README.md → "Filling in your content").
 const projects = [
   {
-    id: "secondserve"
+    id: "secondserve",
     title: "SecondServe",
     tagline:
       "A cloud-native food surplus recovery platform for Singapore's hawker ecosystem — built as a capstone project with a vendor-facing app for tiered, time-based discounting.",
@@ -27,7 +27,7 @@ const projects = [
     secondaryLabel: "ci/cd demo",
   },
   {
-    id: "resume-tailor"
+    id: "resume-tailor",
     title: "AI Resume Tailor",
     tagline:
       "Upload a resume and a job description, get back ATS keyword gaps, a tailored rewrite, and a before/after match score.",
@@ -45,7 +45,7 @@ const projects = [
     demoHref: "https://youtu.be/56b7KRppkfE",
   },
   {
-    id: "memories"
+    id: "memories",
     title: "Memories",
     tagline:
       "A full-stack serverless platform for a shared photo timeline, an interactive map of places visited, a month-by-month calendar, and a guestbook — built solo end to end.",
