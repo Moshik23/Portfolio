@@ -4,7 +4,13 @@ const statusStyles = {
   archived: "text-muted border-line",
 };
 
+const labelStyles = {
+  aws: "text-amber border-amber/40",
+  azure: "text-azure border-azure/40",
+};
+
 export default function ProjectCard({
+  id,
   title,
   tagline,
   status = "demo",
@@ -19,11 +25,13 @@ export default function ProjectCard({
   screenshots = [],
 }) {
   return (
-    <article className="rounded-lg border border-line bg-elevated/60 p-6 sm:p-8">
+    <article id={id} className="rounded-lg border border-line bg-elevated/60 p-6 sm:p-8 scroll-mt-24">
       <div className="flex items-start justify-between gap-4 mb-3">
         <h3 className="font-display text-2xl">{title}</h3>
         <span
-          className={`shrink-0 font-mono text-[11px] uppercase tracking-wider px-2 py-1 rounded border ${statusStyles[status]}`}
+          className={`shrink-0 font-mono text-[11px] uppercase tracking-wider px-2 py-1 rounded border ${
+            labelStyles[(statusLabel || "").toLowerCase()] || statusStyles[status]
+          }`}
         >
           {statusLabel || status}
         </span>
