@@ -83,6 +83,7 @@ const projects = [
     ],
     note: "Built end to end for family — from a print layout matching their actual paper forms down to the AWS deploy pipeline. Real production use, not a demo.",
     repoHref: "https://github.com/Moshik23/domaine-seetloo-booking",
+    demoHref: "https://youtu.be/axsgIrIgOtM",
   },
   {
     id: "portfolio",
