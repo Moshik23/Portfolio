@@ -68,6 +68,23 @@ const projects = [
     repoHref: "https://github.com/Moshik23/memories",
   },
   {
+    id: "domaine-seetloo",
+    title: "Domaine Seetloo Booking Portal",
+    tagline:
+      "A wedding venue booking system built for family in Mauritius, replacing a paper diary after a double-booking cost them a client.",
+    status: "live",
+    statusLabel: "AWS",
+    stack: ["Next.js", "Prisma", "SQLite", "Terraform", "EC2", "Nginx", "Let's Encrypt", "GitHub Actions", "AWS Systems Manager"],
+    highlights: [
+      "Conflict-detection engine is the core feature: every booking is checked against existing ones inside a database transaction, not just client-side, so two staff sessions can't double-book the same date",
+      "GitHub Actions OIDC role assumption was denied by this AWS account's new-account fraud restrictions — fell back to a narrowly-scoped IAM user whose access key can only send SSM commands to this one instance",
+      "Deploys run through AWS Systems Manager Run Command, not SSH — the security group only opens port 22 to one fixed IP, with 80/443 reserved for the app itself",
+      "Nginx reverse proxy + Let's Encrypt HTTPS in front of a single EC2 instance running a plain SQLite file — deliberately simple for a single-venue, low-traffic internal tool",
+    ],
+    note: "Built end to end for family — from a print layout matching their actual paper forms down to the AWS deploy pipeline. Real production use, not a demo.",
+    repoHref: "https://github.com/Moshik23/domaine-seetloo-booking",
+  },
+  {
     id: "portfolio",
     title: "This Portfolio",
     tagline:
