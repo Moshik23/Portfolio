@@ -12,12 +12,12 @@ const groups = [
   {
     label: "Infra & delivery",
     color: "text-good",
-    items: ["Terraform", "Docker", "GitHub Actions", "CI/CD pipelines", "REST API design"],
+    items: ["Terraform", "Docker", "GitHub Actions", "CI/CD pipelines", "REST API design", "Nginx"],
   },
   {
     label: "Application",
     color: "text-ink",
-    items: ["React", "Vite", "Tailwind CSS", "FastAPI", "Python", "Node.js"],
+    items: ["React", "Next.js", "TypeScript", "Vite", "Tailwind CSS", "FastAPI", "Prisma", "Python", "Node.js"],
   },
 ];
 
