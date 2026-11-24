@@ -114,6 +114,8 @@ main{padding:8px 0 24px}
 .tag{font-size:12px;font-weight:600;border-radius:6px;padding:2px 8px;background:var(--line);color:var(--ink)}
 .tag.safe{background:var(--safe-bg);color:var(--safe)} .tag.comfortable{background:var(--comf-bg);color:var(--comf)}
 .tag.tight{background:var(--tight-bg);color:var(--tight)} .tag.stretch{background:var(--stretch-bg);color:var(--stretch)}
+.tag.tl{background:var(--safe-bg);color:var(--safe)}
+.tag.tlc{background:var(--tight-bg);color:var(--tight)}
 .empty{padding:32px 0;color:var(--muted)}
 .info{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;margin:24px 0}
 .info h2{font-family:var(--font-display);font-size:22px;margin:0 0 8px}
@@ -139,6 +141,7 @@ footer{padding:0 0 40px;color:var(--muted);font-size:13px}
     <div id="filters">
     <div class="row"><span class="lab">Area</span><span id="regionChips" class="row" style="margin:0"></span></div>
     <div class="row"><span class="lab">Type</span><span id="typeChips" class="row" style="margin:0"></span></div>
+    <div class="row"><span class="lab">Tamil</span><span id="tamilChips" class="row" style="margin:0"></span></div>
     <div class="row"><span class="lab">Fit</span><span id="tierChips" class="row" style="margin:0"></span></div>
     <div class="row"><span class="lab">Sort</span><span id="sortChips" class="row" style="margin:0"></span></div>
     <div class="row">
@@ -159,6 +162,7 @@ footer{padding:0 0 40px;color:var(--muted);font-size:13px}
       <li><b>Schools excluded:</b> five schools whose ranges start above 16 (Canberra, Juying, Regent, Sembawang, Woodlands Ring), and schools whose last posted score was better than 14.</li>
       <li><b>Boys' schools</b> have been removed. That judgement comes from general knowledge, not the MOE data.</li>
       <li><b>Verify on MOE SchoolFinder</b> before submitting. Ranges come from a third-party table built from SchoolFinder, and one other site lists Admiralty as 15 to 20. Towns come from the MOE school directory.</li>
+      <li><b>Tamil Language:</b> by default only schools that teach Tamil in school are shown. At the other schools, Tamil students go to a Tamil Language Centre after school. Tap "At a centre" to show those too. This comes from each school's MOE SchoolFinder page, checked on 24 Nov 2026, and offerings can change for new intakes.</li>
       <li><b>Distances are straight-line</b> from postal code 640831, not travel times. Bus and MRT routes can make a nearby school slower than one further away, so check the real journey on Google Maps for her final picks. Outram and Yusof Ishak have moved campus, so their distances are approximate.</li>
     </ul>
   </section>
@@ -199,6 +203,9 @@ var DATA = [
 // School coordinates [lat, lng] from a public postal-code dataset. Outram and Yusof Ishak have moved campus, so they use the town MRT station as an approximation.
 var COORDS = {"Admiralty":[1.44589,103.80239],"Marsiling":[1.43664,103.776],"Woodlands Secondary":[1.43918,103.77449],"Woodgrove":[1.42863,103.7963],"Christ Church":[1.42645,103.79338],"Evergreen":[1.44122,103.79377],"Riverside":[1.44108,103.78831],"Northbrooks":[1.42088,103.84506],"Northland":[1.43574,103.8401],"Naval Base":[1.41925,103.83104],"Orchid Park":[1.41489,103.83833],"Ahmad Ibrahim":[1.43623,103.82998],"Yishun Secondary":[1.42813,103.82881],"Compassvale":[1.39622,103.89987],"North Vista":[1.38125,103.89892],"Seng Kang":[1.3861,103.89839],"Outram":[1.39169,103.89548],"Pei Hwa":[1.39038,103.87859],"Punggol":[1.40213,103.90911],"Greendale":[1.39728,103.91157],"Yusof Ishak":[1.40455,103.90207],"Edgefield":[1.40018,103.90214],"Yuying":[1.35693,103.89045],"Hougang":[1.37816,103.88187],"Serangoon":[1.37556,103.90191],"Bowen":[1.37075,103.87745],"Holy Innocents' High":[1.37122,103.89602],"Serangoon Garden":[1.36989,103.86914],"Peicai":[1.35927,103.87049],"Yio Chu Kang":[1.37826,103.8418],"Mayflower":[1.36834,103.83543],"Ang Mo Kio Secondary":[1.36736,103.8426],"Deyi":[1.36735,103.85193],"Guangyang":[1.34467,103.85055],"Whitley":[1.35549,103.84256],"Peirce":[1.36613,103.82991],"Bartley":[1.34002,103.88245],"Beatty":[1.34179,103.85206],"Queenstown":[1.29353,103.81317],"New Town":[1.30999,103.77324],"Queensway":[1.30048,103.80172],"Bukit Merah":[1.28575,103.8132],"Gan Eng Seng":[1.28907,103.82373],"Bendemeer":[1.32435,103.86051],"Damai":[1.33754,103.92641],"Bedok Green":[1.33383,103.93551],"Bedok South":[1.32565,103.95062],"Bedok View":[1.324,103.94347],"Changkat Changi":[1.34036,103.95272],"East Spring":[1.35676,103.9611],"Springfield":[1.34957,103.93021],"Junyuan":[1.35334,103.93341],"Tampines Secondary":[1.34943,103.94398],"Pasir Ris Secondary":[1.35464,103.94861],"Dunman Secondary":[1.36055,103.9562],"Loyang View":[1.36666,103.95806],"Meridian":[1.36711,103.94927],"Pasir Ris Crest":[1.37234,103.95936],"Hai Sing Catholic":[1.37464,103.95475],"Broadrick":[1.3075,103.88667],"Manjusri":[1.32752,103.90181],"Geylang Methodist":[1.31766,103.8825],"CHIJ Katong Convent":[1.3066,103.91775],"Boon Lay":[1.34322,103.7017],"Westwood":[1.35353,103.7016],"Yuhua":[1.34722,103.72258],"Yuan Ching":[1.34189,103.72063],"Jurong Secondary":[1.33015,103.72409],"Jurong West Secondary":[1.33526,103.70209],"Hua Yi":[1.35236,103.72172],"Jurongville":[1.35155,103.72911],"Dunearn":[1.36364,103.745],"Bukit View":[1.34572,103.75227],"Hillgrove":[1.35274,103.75305],"Bukit Batok":[1.34835,103.74087],"Assumption English":[1.36853,103.76667],"Greenridge":[1.38192,103.77361],"Zhenghua":[1.3882,103.76525],"West Spring":[1.3878,103.76014],"Chua Chu Kang":[1.38327,103.75202],"Unity":[1.39964,103.74603],"Kranji":[1.39004,103.74109],"Kent Ridge":[1.30135,103.76492],"CHIJ St. Joseph's Convent":[1.39178,103.90258],"St. Anthony's Canossian":[1.33496,103.94167],"St. Hilda's":[1.35038,103.93665]};
 var APPROX = {"Outram":true,"Yusof Ishak":true};
+// Schools whose MOE SchoolFinder page says Tamil Language students attend lessons at a Tamil Language Centre after school (checked 24 Nov 2026). All other schools here list Tamil Language as taught in school.
+var TAMIL_CENTRE = ["Admiralty", "Woodgrove", "Orchid Park", "Pei Hwa", "Greendale", "Evergreen", "Yuying", "Peicai", "Hougang", "Mayflower", "Ang Mo Kio Secondary", "North Vista", "Holy Innocents' High", "Damai", "Springfield", "Hai Sing Catholic", "Northbrooks", "Compassvale", "Edgefield", "CHIJ Katong Convent", "Geylang Methodist", "Bedok South", "Pasir Ris Secondary", "Yusof Ishak", "Junyuan", "Manjusri", "Hua Yi", "Dunearn", "Hillgrove", "West Spring", "Tampines Secondary", "Meridian", "Assumption English", "Zhenghua", "Kent Ridge", "St. Anthony's Canossian", "Westwood"];
+var TAMIL = {school:"Taught in school", centre:"At a centre"};
 var HOME = [1.34485,103.69481]; // postal code 640831, Jurong West St 81
 var REGIONS = ["North","North-East","Central","East","West"];
 var TYPES = {coed:"Co-ed", girls:"Girls'"};
@@ -230,7 +237,7 @@ DATA.forEach(function(g){
     var cop=o[1];
     var tier = cop>=21?"safe":cop>=18?"comfortable":cop>=16?"tight":"stretch";
     var c=COORDS[r[0]], dist=c?km(HOME,c):null;
-    schools.push({name:r[0],region:g[0],town:g[1],cop:cop,range:o,tier:tier,flag:flag,type:flag==="G"?"girls":"coed",dist:dist});
+    schools.push({name:r[0],region:g[0],town:g[1],cop:cop,range:o,tier:tier,flag:flag,type:flag==="G"?"girls":"coed",tamil:TAMIL_CENTRE.indexOf(r[0])===-1?"school":"centre",dist:dist});
   });
 });
 var byName={}; schools.forEach(function(s){byName[s.name]=s;});
@@ -239,6 +246,7 @@ var state = {
   regions:{"North":true,"North-East":true,"Central":true,"East":true,"West":true},
   tiers:{safe:true,comfortable:true,tight:true,stretch:true},
   types:{coed:true,girls:true},
+  tamil:{school:true,centre:false},
   q:"", view:"all", sort:"cop"
 };
 
@@ -259,6 +267,7 @@ function visible(s){
   if(!state.regions[s.region]) return false;
   if(!state.tiers[s.tier]) return false;
   if(!state.types[s.type]) return false;
+  if(!state.tamil[s.tamil]) return false;
   if(state.q && s.name.toLowerCase().indexOf(state.q)===-1) return false;
   return true;
 }
@@ -267,6 +276,7 @@ function card(s, rank){
   var left=pct(s.range[0]), width=Math.max(2,pct(s.range[1])-left);
   var tags='<span class="tag '+s.tier+'">'+TIERS[s.tier].label+'</span><span class="tag">'+esc(s.town)+'</span>';
   if(s.flag==="G") tags+='<span class="tag">Girls\' school</span>';
+  tags+=s.tamil==="school"?'<span class="tag tl">Tamil in school</span>':'<span class="tag tlc">Tamil at a centre</span>';
   var fav=isFav(s.name);
   var head='<div class="top"><div class="nm">'+(rank?'<span class="rank'+(rank>6?' over':'')+'">'+(rank<=6?'Choice '+rank:'Extra')+'</span>':'')+'<h4 class="name">'+esc(s.name)+'</h4><span class="dist">'+distText(s)+' from home</span></div><div class="cop"><b>'+s.cop+'</b><small>COP</small></div></div>';
   var actions='<div class="acts"><button type="button" class="fav" data-fav="'+esc(s.name)+'" aria-pressed="'+fav+'">'+(fav?(rank?'Remove':'★ Shortlisted'):'☆ Add to shortlist')+'</button>';
@@ -336,7 +346,7 @@ function render(){
         html+=section(TIERS[k].label, TIERS[k].range+'. '+TIERS[k].desc+'. '+items.length+' schools', inner);
       });
     }
-    if(!list.length) html='<p class="empty">No schools match these filters. Clear the search or turn on more areas, types or fit levels.</p>';
+    if(!list.length) html='<p class="empty">No schools match these filters. Clear the search or turn on more areas, types, Tamil options or fit levels.</p>';
   }
   document.getElementById("out").innerHTML=html;
   var nf=favOrder.length;
@@ -370,6 +380,8 @@ function renderChips(){
   REGIONS.forEach(function(r){rc.appendChild(chip(r,state.regions[r],"",function(){state.regions[r]=!state.regions[r];renderChips();render();}));});
   var yc=document.getElementById("typeChips"); yc.innerHTML="";
   Object.keys(TYPES).forEach(function(k){yc.appendChild(chip(TYPES[k],state.types[k],"",function(){state.types[k]=!state.types[k];renderChips();render();}));});
+  var lc=document.getElementById("tamilChips"); lc.innerHTML="";
+  Object.keys(TAMIL).forEach(function(k){lc.appendChild(chip(TAMIL[k],state.tamil[k],"",function(){state.tamil[k]=!state.tamil[k];renderChips();render();}));});
   var tc=document.getElementById("tierChips"); tc.innerHTML="";
   ORDER.forEach(function(k){tc.appendChild(chip(TIERS[k].label+" ("+TIERS[k].range.replace("COP ","")+")",state.tiers[k],"t-"+k,function(){state.tiers[k]=!state.tiers[k];renderChips();render();}));});
   var sc=document.getElementById("sortChips"); sc.innerHTML="";
@@ -392,7 +404,7 @@ document.getElementById("out").addEventListener("click",function(e){
 });
 document.getElementById("tabAll").addEventListener("click",function(){state.view="all";render();});
 document.getElementById("tabFav").addEventListener("click",function(){state.view="fav";render();});
-document.getElementById("copyBtn").addEventListener("click",function(){var b=this;var t=favOrder.map(function(n,i){var s=byName[n];return (i<6?"Choice "+(i+1):"Extra")+": "+s.name+" (COP "+s.cop+", "+s.town+", "+distText(s)+")";}).join("\n");navigator.clipboard.writeText(t).then(function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy list";},1500);},function(){b.textContent="Copy failed";});});
+document.getElementById("copyBtn").addEventListener("click",function(){var b=this;var t=favOrder.map(function(n,i){var s=byName[n];return (i<6?"Choice "+(i+1):"Extra")+": "+s.name+" (COP "+s.cop+", "+s.town+", "+distText(s)+", Tamil "+(s.tamil==="school"?"in school":"at a centre")+")";}).join("\n");navigator.clipboard.writeText(t).then(function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy list";},1500);},function(){b.textContent="Copy failed";});});
 syncTheme();
 renderTiles();renderChips();render();
 </script>
