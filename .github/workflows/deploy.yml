@@ -3,30 +3,37 @@ name: Deploy to AWS
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # GitHub OIDC token, swapped for short-lived AWS credentials
+  contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run build
 
+      # No stored AWS keys: assumes portfolio-github-deploy via OIDC (terraform/github-oidc.tf)
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: portfolio-deploy
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Sync to S3

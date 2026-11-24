@@ -26,7 +26,9 @@ demo can't show on its own.
   machine, not just the one that first ran `terraform apply`
 - **GitHub Actions** — every push to `main` automatically builds and
   deploys the site (`.github/workflows/deploy.yml`): install, build, sync
-  to S3, invalidate CloudFront
+  to S3, invalidate CloudFront. It authenticates to AWS through GitHub
+  OIDC (`terraform/github-oidc.tf`) with a role that can only touch this
+  bucket and distribution, so no AWS keys are stored in GitHub
 
 ## Running locally
 
@@ -50,7 +52,7 @@ src/
 ├── App.jsx — page composition
 ├── index.css — design tokens (colors, fonts) + Tailwind entry
 ├── assets/
-│ └── memories/ — sanitized screenshots for the Memories project card
+│ └── memories/ — blurred screenshots for the Memories project card
 └── components/
 ├── Nav.jsx
 ├── Hero.jsx
@@ -60,7 +62,8 @@ src/
 ├── ProjectCard.jsx — reusable card layout (links, screenshot gallery)
 └── Contact.jsx
 terraform/
-└── main.tf — S3 + CloudFront + ACM + custom domain, as code
+├── main.tf — S3 + CloudFront + ACM + custom domain, as code
+└── github-oidc.tf — keyless GitHub Actions deploy role (OIDC)
 .github/workflows/
 └── deploy.yml — CI/CD: build + deploy on every push to main
 
