@@ -68,6 +68,13 @@ h1{font-family:var(--font-display);font-size:clamp(28px,5vw,44px);line-height:1.
 :root[data-theme="dark"] .chip[aria-pressed="true"]{color:#0e1718}
 .search{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-width:200px;flex:1;max-width:320px}
 .count{margin-left:auto;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.tab{font:inherit;font-size:15px;font-weight:600;color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:4px 2px;margin-right:12px;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:focus-visible,.fav:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.fav{font:inherit;font-size:13px;font-weight:600;align-self:flex-start;color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer}
+.fav:hover{border-color:var(--accent)}
+.fav[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 main{padding:8px 0 24px}
 .region{margin-top:28px}
 .region h2{font-family:var(--font-display);font-size:26px;margin:0 0 4px}
@@ -114,11 +121,13 @@ footer{padding:0 0 40px;color:var(--muted);font-size:13px}
   <section class="tiles" id="tiles" aria-label="Summary"></section>
 
   <div class="bar" role="region" aria-label="Filters">
+    <div class="tabs" role="tablist"><button type="button" class="tab" id="tabAll" role="tab">All schools</button><button type="button" class="tab" id="tabFav" role="tab">My shortlist</button><button type="button" class="chip" id="copyBtn" hidden>Copy list</button><span class="count" id="count" aria-live="polite"></span></div>
+    <div id="filters">
     <div class="row"><span class="lab">Area</span><span id="regionChips" class="row" style="margin:0"></span></div>
     <div class="row"><span class="lab">Fit</span><span id="tierChips" class="row" style="margin:0"></span></div>
     <div class="row">
       <input id="q" class="search" type="search" placeholder="Search school name" aria-label="Search school name">
-      <span class="count" id="count" aria-live="polite"></span>
+    </div>
     </div>
   </div>
 
@@ -190,12 +199,16 @@ DATA.forEach(function(g){
   });
 });
 
-var state = {regions:{"North":true,"North-East":true,"Central":true,"East":true,"West":true}, tiers:{safe:true,comfortable:true,tight:true,stretch:true}, q:""};
+var state = {regions:{"North":true,"North-East":true,"Central":true,"East":true,"West":true}, tiers:{safe:true,comfortable:true,tight:true,stretch:true}, q:"", view:"all"};
 
+var favs={};
+try{(JSON.parse(localStorage.getItem("psle-favs"))||[]).forEach(function(n){favs[n]=true;});}catch(e){}
+function saveFavs(){try{localStorage.setItem("psle-favs",JSON.stringify(Object.keys(favs)));}catch(e){}}
 function pct(v){return Math.max(0,Math.min(100,(v-MIN)/(MAX-MIN)*100));}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 
 function visible(s){
+  if(state.view==="fav") return !!favs[s.name];
   if(!state.regions[s.region]) return false;
   if(!state.tiers[s.tier]) return false;
   if(state.q && s.name.toLowerCase().indexOf(state.q)===-1) return false;
@@ -212,7 +225,7 @@ function card(s){
       '<div class="fill" style="left:'+left+'%;width:'+width+'%"></div>'+
       '<div class="mark" style="left:calc('+pct(SCORE)+'% - 1px)"></div></div>'+
       '<div class="rl"><span>Best posted '+s.range[0]+'</span><span>Last posted '+s.range[1]+'</span></div></div>'+
-    '<div class="tags">'+tags+'</div></article>';
+    '<div class="tags">'+tags+'</div><button type="button" class="fav" data-fav="'+esc(s.name)+'" aria-pressed="'+(!!favs[s.name])+'">'+(favs[s.name]?'\u2605 Shortlisted':'\u2606 Add to shortlist')+'</button></article>';
 }
 
 function render(){
@@ -230,9 +243,16 @@ function render(){
     });
     html+='</section>';
   });
-  if(!list.length) html='<p class="empty">No schools match these filters. Clear the search or turn on more areas or fit levels.</p>';
+  if(!list.length && state.view==="fav") html='<p class="empty">No schools shortlisted yet. Go to All schools and tap \u2606 Add to shortlist on the ones she likes.</p>';
+  else if(!list.length) html='<p class="empty">No schools match these filters. Clear the search or turn on more areas or fit levels.</p>';
   document.getElementById("out").innerHTML=html;
-  document.getElementById("count").textContent=list.length+" of "+schools.length+" schools shown";
+  var nf=schools.filter(function(s){return favs[s.name];}).length;
+  document.getElementById("count").textContent=state.view==="fav"?nf+" shortlisted. The S1 form takes 6 choices.":list.length+" of "+schools.length+" schools shown";
+  document.getElementById("tabAll").setAttribute("aria-selected",String(state.view==="all"));
+  document.getElementById("tabFav").setAttribute("aria-selected",String(state.view==="fav"));
+  document.getElementById("tabFav").textContent="My shortlist ("+nf+")";
+  document.getElementById("filters").hidden=state.view==="fav";
+  document.getElementById("copyBtn").hidden=!(state.view==="fav"&&nf);
 }
 
 function renderTiles(){
@@ -277,6 +297,10 @@ function isDark(){var t=root.getAttribute("data-theme");return t?t==="dark":wind
 function syncTheme(){themeBtn.textContent=isDark()?"\u2600 Light mode":"\u263E Dark mode";}
 try{var saved=localStorage.getItem("psle-theme");if(saved)root.setAttribute("data-theme",saved);}catch(e){}
 themeBtn.addEventListener("click",function(){var t=isDark()?"light":"dark";root.setAttribute("data-theme",t);try{localStorage.setItem("psle-theme",t);}catch(e){}syncTheme();});
+document.getElementById("out").addEventListener("click",function(e){var b=e.target.closest("[data-fav]");if(!b)return;var n=b.getAttribute("data-fav");if(favs[n])delete favs[n];else favs[n]=true;saveFavs();render();});
+document.getElementById("tabAll").addEventListener("click",function(){state.view="all";render();});
+document.getElementById("tabFav").addEventListener("click",function(){state.view="fav";render();});
+document.getElementById("copyBtn").addEventListener("click",function(){var b=this;var t=schools.filter(function(s){return favs[s.name];}).sort(function(a,c){return a.cop-c.cop||a.name.localeCompare(c.name);}).map(function(s,i){return (i+1)+". "+s.name+" (COP "+s.cop+", "+s.town+")";}).join("\n");navigator.clipboard.writeText(t).then(function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy list";},1500);},function(){b.textContent="Copy failed";});});
 syncTheme();
 renderTiles();renderChips();render();
 </script>
