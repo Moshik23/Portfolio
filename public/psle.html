@@ -188,13 +188,13 @@ DATA.forEach(function(g){
   });
 });
 
-var state = {region:"All", tiers:{safe:true,comfortable:true,tight:true,stretch:true}, q:""};
+var state = {regions:{"North":true,"North-East":true,"Central":true,"East":true,"West":true}, tiers:{safe:true,comfortable:true,tight:true,stretch:true}, q:""};
 
 function pct(v){return Math.max(0,Math.min(100,(v-MIN)/(MAX-MIN)*100));}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 
 function visible(s){
-  if(state.region!=="All" && s.region!==state.region) return false;
+  if(!state.regions[s.region]) return false;
   if(!state.tiers[s.tier]) return false;
   if(state.q && s.name.toLowerCase().indexOf(state.q)===-1) return false;
   return true;
@@ -228,7 +228,7 @@ function render(){
     });
     html+='</section>';
   });
-  if(!list.length) html='<p class="empty">No schools match these filters. Clear the search or turn on more fit levels.</p>';
+  if(!list.length) html='<p class="empty">No schools match these filters. Clear the search or turn on more areas or fit levels.</p>';
   document.getElementById("out").innerHTML=html;
   document.getElementById("count").textContent=list.length+" of "+schools.length+" schools shown";
 }
@@ -245,11 +245,17 @@ function renderTiles(){
 function renderChips(){
   var rc=document.getElementById("regionChips");
   rc.innerHTML="";
-  ["All"].concat(REGIONS).forEach(function(r){
+  var allOn=REGIONS.every(function(r){return state.regions[r];});
+  var a=document.createElement("button");
+  a.type="button"; a.className="chip"; a.textContent="All";
+  a.setAttribute("aria-pressed", String(allOn));
+  a.onclick=function(){var v=!allOn;REGIONS.forEach(function(r){state.regions[r]=v;});renderChips();render();};
+  rc.appendChild(a);
+  REGIONS.forEach(function(r){
     var b=document.createElement("button");
     b.type="button"; b.className="chip"; b.textContent=r;
-    b.setAttribute("aria-pressed", String(state.region===r));
-    b.onclick=function(){state.region=r;renderChips();render();};
+    b.setAttribute("aria-pressed", String(state.regions[r]));
+    b.onclick=function(){state.regions[r]=!state.regions[r];renderChips();render();};
     rc.appendChild(b);
   });
   var tc=document.getElementById("tierChips");
