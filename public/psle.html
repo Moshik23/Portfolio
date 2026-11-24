@@ -41,6 +41,8 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5}
 .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
 header{padding:32px 0 8px}
+.hrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin:0 0 6px}
+.hrow .eyebrow{margin:0}
 .eyebrow{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
 h1{font-family:var(--font-display);font-size:clamp(28px,5vw,44px);line-height:1.1;margin:0 0 10px;text-wrap:balance}
 .lede{max-width:65ch;color:var(--muted);margin:0}
@@ -104,7 +106,7 @@ footer{padding:0 0 40px;color:var(--muted);font-size:13px}
 <body>
 <div class="wrap">
   <header>
-    <p class="eyebrow">PSLE AL 16 &middot; Posting Group 3 &middot; Secondary 1 in 2027</p>
+    <div class="hrow"><p class="eyebrow">PSLE AL 16 &middot; Posting Group 3 &middot; Secondary 1 in 2027</p><button type="button" id="themeBtn" class="chip">Dark mode</button></div>
     <h1>Secondary school shortlist</h1>
     <p class="lede">Schools whose 2025 posting range fits an AL score of 16, plus a few just below it, arranged from the most competitive cut-off to the least. Lower scores are better. The big number on each card is the cut-off point (COP), the score of the last student posted. The black tick on each bar marks AL 16.</p>
   </header>
@@ -270,6 +272,12 @@ function renderChips(){
 }
 
 document.getElementById("q").addEventListener("input",function(e){state.q=e.target.value.trim().toLowerCase();render();});
+var root=document.documentElement, themeBtn=document.getElementById("themeBtn");
+function isDark(){var t=root.getAttribute("data-theme");return t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;}
+function syncTheme(){themeBtn.textContent=isDark()?"\u2600 Light mode":"\u263E Dark mode";}
+try{var saved=localStorage.getItem("psle-theme");if(saved)root.setAttribute("data-theme",saved);}catch(e){}
+themeBtn.addEventListener("click",function(){var t=isDark()?"light":"dark";root.setAttribute("data-theme",t);try{localStorage.setItem("psle-theme",t);}catch(e){}syncTheme();});
+syncTheme();
 renderTiles();renderChips();render();
 </script>
 </body>
