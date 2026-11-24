@@ -1,8 +1,8 @@
 import ProjectCard from "./ProjectCard";
-import timelineShot from "../assets/memories/memories-timeline.png";
-import guestbookShot from "../assets/memories/memories-guestbook.png";
-import mapShot from "../assets/memories/memories-map.png";
-import monthsShot from "../assets/memories/memories-months.png";
+import scrapbookShot from "../assets/memories/memories-scrapbook.jpg";
+import addShot from "../assets/memories/memories-add.jpg";
+import monthShot from "../assets/memories/memories-month.jpg";
+import monthsShot from "../assets/memories/memories-months.jpg";
 
 // TODO: swap the "#" hrefs below for your real repo links and demo
 // walkthroughs (see README.md → "Filling in your content").
@@ -48,22 +48,22 @@ const projects = [
     id: "memories",
     title: "Memories",
     tagline:
-      "A full-stack serverless platform for a shared photo timeline, an interactive map of places visited, a month-by-month calendar, and a guestbook — built solo end to end.",
+      "A private, scrapbook-style site for my partner and me: photos by month, a map of places we've been, notes to each other, and multi-photo uploads straight from our phones. Built solo, end to end, on serverless AWS.",
     status: "live",
     statusLabel: "AWS",
-    stack: ["S3", "CloudFront", "Lambda", "API Gateway", "DynamoDB", "Terraform", "GitHub Actions"],
+    stack: ["S3", "CloudFront", "Lambda", "API Gateway", "DynamoDB", "ACM", "Terraform", "HCP Terraform", "GitHub Actions"],
     highlights: [
-      "S3 fully private, reachable only via CloudFront Origin Access Control scoped to one distribution's ARN",
-      "Guestbook backend on API Gateway → Lambda → DynamoDB, with the Lambda role scoped to exactly two actions",
-      "GitHub Actions auto-deploys on push; when OIDC role assumption hit AWS's new-account fraud restrictions, fell back to scoped access keys rather than blocking — and documented why",
-      "Scale-to-zero by design: on-demand DynamoDB and Lambda keep this running at effectively $0",
+      "Phones upload straight to S3 through one-time presigned PUT links, signed in the Lambda with a hand-written SigV4 implementation (zero dependencies, verified against the AWS SDK); the browser resizes each photo and reads its EXIF date and GPS first",
+      "API Gateway sits behind CloudFront at /api/* under the same password as the site, and every Lambda rejects requests without a CloudFront-only secret header, so the API can't be called around the CDN",
+      "Deploys use GitHub OIDC with a role limited to the site bucket and one distribution, and explicitly denied the uploads/ prefix. Traced an earlier AssumeRoleWithWebIdentity failure to GitHub's immutable subject claims and fixed the trust policy",
+      "Built so a release can never lose a photo: the deploy sync excludes user uploads, S3 versioning with lifecycle expiry keeps deleted files recoverable, and DynamoDB has point-in-time recovery",
     ],
-    note: "Originally built as a private gift project — the architecture and security decisions are the portfolio-relevant part.",
+    note: "Started as a private gift and rebuilt from a static timeline into a living scrapbook we both add to. Photos are blurred in the screenshots; the architecture and security decisions are the portfolio-relevant part.",
     screenshots: [
-      { src: timelineShot, caption: "Scrolling timeline" },
-      { src: guestbookShot, caption: "Guestbook" },
-      { src: mapShot, caption: "Places visited map" },
-      { src: monthsShot, caption: "Month-by-month calendar" },
+      { src: scrapbookShot, caption: "Scrapbook home with a running timer" },
+      { src: addShot, caption: "Multi-photo upload with EXIF date and place" },
+      { src: monthShot, caption: "A month's page" },
+      { src: monthsShot, caption: "Every month at a glance" },
     ],
     repoHref: "https://github.com/Moshik23/memories",
   },
@@ -97,7 +97,7 @@ const projects = [
       "Fully private S3 bucket, reachable only via CloudFront Origin Access Control scoped to this distribution's ARN",
       "Terraform-managed end to end, with remote state in S3 and DynamoDB-based locking — safe to run from any machine, not just the one that first applied it",
       "Custom domain with ACM-issued HTTPS covering both the apex domain and www",
-      "GitHub Actions auto-builds and redeploys on every push to main",
+      "GitHub Actions auto-builds and redeploys on every push to main, authenticating to AWS through OIDC with a narrowly scoped role (no stored AWS keys)",
     ],
     note: "A little recursive, yes — but the infrastructure behind this page is a genuine project, not just hosting.",
     repoHref: "https://github.com/Moshik23/Portfolio",
