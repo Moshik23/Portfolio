@@ -26,7 +26,7 @@ resource "aws_cloudfront_function" "short_links" {
         key = key.slice(0, -1);
       }
       key = key.slice(1);
-      var target = LINKS[key];
+      var target = Object.prototype.hasOwnProperty.call(LINKS, key) ? LINKS[key] : null;
       if (target) {
         return {
           statusCode: 302,
