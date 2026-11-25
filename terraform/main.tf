@@ -89,6 +89,12 @@ resource "aws_cloudfront_distribution" "site" {
         forward = "none"
       }
     }
+
+    # Short links like /moodie (see short-links.tf)
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.short_links.arn
+    }
   }
 
   # SPA routing: unknown paths fall back to index.html
