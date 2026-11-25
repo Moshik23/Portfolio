@@ -104,6 +104,13 @@ resource "aws_cloudfront_distribution" "site" {
     response_page_path = "/index.html"
   }
 
+  # The private bucket answers 403, not 404, for files that don't exist
+  custom_error_response {
+    error_code         = 403
+    response_code      = 200
+    response_page_path = "/index.html"
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
